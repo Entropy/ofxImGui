@@ -30,6 +30,14 @@ void ofxImGui::setup(BaseTheme* theme_)
     {
         setTheme(new BaseTheme());
     }
+
+	mouseListeners.push_back(ofEvents().mouseDragged.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseEntered.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseExited.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseMoved.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mousePressed.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseReleased.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseScrolled.newListener(this, &ofxImGui::mouseEvent));
 }
 
 void ofxImGui::setTheme(BaseTheme* theme_)
@@ -102,6 +110,10 @@ GLuint ofxImGui::loadTexture(ofTexture& texture, string imagePath)
 
 void ofxImGui::begin()
 {
+	if(!firstFrame){
+		ImGui::Render();
+	}
+	firstFrame = false;
     if(!engine)
     {
         ofLogError(__FUNCTION__) << "setup call required - calling it for you";
@@ -120,21 +132,35 @@ void ofxImGui::begin()
         io.DeltaTime = 1.0f / 60.f;
     }
     lastTime = currentTime;
-    
-    // Update Settings
-    io.MousePos = ImVec2((float)ofGetMouseX(), (float)ofGetMouseY());
-    for(int i = 0; i < 5; i++){
-        io.MouseDown[i] = engine->mousePressed[i];
-        
-        // Update for next frame; set to false only if the mouse has been released
-        engine->mousePressed[i] = !engine->mouseReleased;
-    }
+
     ImGui::NewFrame();
+}
+
+bool ofxImGui::mouseEvent(ofMouseEventArgs & mouse){
+	ImGuiIO& io = ImGui::GetIO();
+	io.MousePos = ImVec2(mouse.x, mouse.y);
+	auto guiPos = ImGui::GetWindowPos();
+	auto guiSize = ImGui::GetWindowSize();
+	ofRectangle guiRect{guiPos.x, guiPos.y, guiSize.x, guiSize.y};
+	switch (mouse.type) {
+		case ofMouseEventArgs::Pressed:
+			io.MouseDown[mouse.button] = true;
+			mouseEventStartedOnGui = guiRect.inside(guiPos.x, guiPos.y);
+			return mouseEventStartedOnGui;
+		case ofMouseEventArgs::Released:{
+			io.MouseDown[mouse.button] = false;
+			io.MouseReleased[mouse.button] = true;
+			auto attended = mouseEventStartedOnGui;
+			mouseEventStartedOnGui = false;
+			return attended;
+		}
+		default:
+		return mouseEventStartedOnGui;
+	}
 }
 
 void ofxImGui::end()
 {
-    ImGui::Render();
 }
 
 void ofxImGui::close()

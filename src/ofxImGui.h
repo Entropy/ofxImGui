@@ -44,4 +44,10 @@ public:
 #else  
     EngineGLFW* engine;
 #endif
+
+private:
+	bool mouseEvent(ofMouseEventArgs & mouse);
+	std::vector<ofEventListener> mouseListeners;
+	bool mouseEventStartedOnGui;
+	bool firstFrame = true;
 };
