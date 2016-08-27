@@ -46,14 +46,14 @@ void EngineGLFW::setup()
     createDeviceObjects();
 
     // Override listeners
-    ofAddListener(ofEvents().mousePressed, this, &EngineGLFW::onMousePressed);
+	//ofAddListener(ofEvents().mousePressed, this, &EngineGLFW::onMousePressed);
     ofAddListener(ofEvents().keyReleased, this, &EngineGLFW::onKeyReleased);
     ofAddListener(ofEvents().keyPressed, this, &EngineGLFW::onKeyPressed);
 
     // BaseEngine listeners
-    ofAddListener(ofEvents().mouseDragged, (BaseEngine*)this, &BaseEngine::onMouseDragged);
-    ofAddListener(ofEvents().mouseReleased, (BaseEngine*)this, &BaseEngine::onMouseReleased);
-    ofAddListener(ofEvents().mouseScrolled, (BaseEngine*)this, &BaseEngine::onMouseScrolled);
+	/*ofAddListener(ofEvents().mouseDragged, (BaseEngine*)this, &BaseEngine::onMouseDragged);
+	ofAddListener(ofEvents().mouseReleased, (BaseEngine*)this, &BaseEngine::onMouseReleased);
+	ofAddListener(ofEvents().mouseScrolled, (BaseEngine*)this, &BaseEngine::onMouseScrolled);*/
     ofAddListener(ofEvents().windowResized, (BaseEngine*)this, &BaseEngine::onWindowResized);
 
     isSetup = true;
@@ -64,14 +64,14 @@ void EngineGLFW::exit()
     if(!isSetup) return;
 
     // Override listeners
-    ofRemoveListener(ofEvents().mousePressed, this, &EngineGLFW::onMousePressed);
+    //ofRemoveListener(ofEvents().mousePressed, this, &EngineGLFW::onMousePressed);
     ofRemoveListener(ofEvents().keyReleased, this, &EngineGLFW::onKeyReleased);
     ofRemoveListener(ofEvents().keyPressed, this, &EngineGLFW::onKeyPressed);
 
     // Base class listeners
-    ofRemoveListener(ofEvents().mouseDragged, (BaseEngine*)this, &BaseEngine::onMouseDragged);
-    ofRemoveListener(ofEvents().mouseReleased, (BaseEngine*)this, &BaseEngine::onMouseReleased);
-    ofRemoveListener(ofEvents().mouseScrolled, (BaseEngine*)this, &BaseEngine::onMouseScrolled);
+   /* ofRemoveListener(ofEvents().mouseDragged, (BaseEngine*)this, &BaseEngine::onMouseDragged);
+	ofRemoveListener(ofEvents().mouseReleased, (BaseEngine*)this, &BaseEngine::onMouseReleased);
+	ofRemoveListener(ofEvents().mouseScrolled, (BaseEngine*)this, &BaseEngine::onMouseScrolled);*/
     ofRemoveListener(ofEvents().windowResized, (BaseEngine*)this, &BaseEngine::onWindowResized);
 
     invalidateDeviceObjects();

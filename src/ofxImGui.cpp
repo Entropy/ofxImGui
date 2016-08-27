@@ -31,13 +31,13 @@ void ofxImGui::setup(BaseTheme* theme_)
         setTheme(new BaseTheme());
     }
 
-	mouseListeners.push_back(ofEvents().mouseDragged.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mouseEntered.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mouseExited.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mouseMoved.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mousePressed.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mouseReleased.newListener(this, &ofxImGui::mouseEvent));
-	mouseListeners.push_back(ofEvents().mouseScrolled.newListener(this, &ofxImGui::mouseEvent));
+	mouseListeners.push_back(ofEvents().mouseDragged.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mouseEntered.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mouseExited.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mouseMoved.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mousePressed.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mouseReleased.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
+	mouseListeners.push_back(ofEvents().mouseScrolled.newListener(this, &ofxImGui::mouseEvent, OF_EVENT_ORDER_BEFORE_APP));
 }
 
 void ofxImGui::setTheme(BaseTheme* theme_)
@@ -111,7 +111,7 @@ GLuint ofxImGui::loadTexture(ofTexture& texture, string imagePath)
 void ofxImGui::begin()
 {
 	if(!firstFrame){
-		ImGui::Render();
+		//ImGui::Render();
 	}
 	firstFrame = false;
     if(!engine)
@@ -133,19 +133,17 @@ void ofxImGui::begin()
     }
     lastTime = currentTime;
 
-    ImGui::NewFrame();
+	ImGui::NewFrame();
 }
 
 bool ofxImGui::mouseEvent(ofMouseEventArgs & mouse){
 	ImGuiIO& io = ImGui::GetIO();
 	io.MousePos = ImVec2(mouse.x, mouse.y);
-	auto guiPos = ImGui::GetWindowPos();
-	auto guiSize = ImGui::GetWindowSize();
 	ofRectangle guiRect{guiPos.x, guiPos.y, guiSize.x, guiSize.y};
 	switch (mouse.type) {
 		case ofMouseEventArgs::Pressed:
 			io.MouseDown[mouse.button] = true;
-			mouseEventStartedOnGui = guiRect.inside(guiPos.x, guiPos.y);
+			mouseEventStartedOnGui = guiRect.inside(mouse);
 			return mouseEventStartedOnGui;
 		case ofMouseEventArgs::Released:{
 			io.MouseDown[mouse.button] = false;
@@ -154,6 +152,9 @@ bool ofxImGui::mouseEvent(ofMouseEventArgs & mouse){
 			mouseEventStartedOnGui = false;
 			return attended;
 		}
+		case ofMouseEventArgs::Scrolled:
+			io.MouseWheel = mouse.scrollY;
+			return guiRect.inside(mouse);
 		default:
 		return mouseEventStartedOnGui;
 	}
@@ -161,6 +162,11 @@ bool ofxImGui::mouseEvent(ofMouseEventArgs & mouse){
 
 void ofxImGui::end()
 {
+	//TODO: this is wrong, the size of the last window or
+	// something but can't be used for capturing mouse events
+	guiPos = ImGui::GetWindowPos();
+	guiSize = ImGui::GetWindowSize();
+	ImGui::Render();
 }
 
 void ofxImGui::close()

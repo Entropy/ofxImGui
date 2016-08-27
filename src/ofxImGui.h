@@ -50,4 +50,5 @@ private:
 	std::vector<ofEventListener> mouseListeners;
 	bool mouseEventStartedOnGui;
 	bool firstFrame = true;
+	ImVec2 guiPos, guiSize;
 };
