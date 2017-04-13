@@ -139,12 +139,31 @@ namespace ofxImGui
 		lastTime = currentTime;
 
 		// Update settings
+		bool doubleClickHack = ofGetFrameRate() < 30;
 		io.MousePos = ImVec2((float)ofGetMouseX(), (float)ofGetMouseY());
 		for (int i = 0; i < 5; i++) {
 			io.MouseDown[i] = engine->mousePressed[i];
 
 			// Update for next frame; set to false only if the mouse has been released
-			engine->mousePressed[i] = !engine->mouseReleased;
+			engine->mousePressed[i] = false;// !engine->mouseReleased;
+
+			// If the app framerate dips too low, it becomes impossible to register a double-click
+			// because frames are rendered slower than the minimum double-click time of 0.3 seconds.
+			// This hack uses a frame delta instead of a time delta to determine if a double-click
+			// has occurred, and changes the click time sent to ImGui to properly register the event,
+			// keeping the GUI usable even if the app is running slow.
+			if (doubleClickHack && io.MouseDown[i]) {
+				int mouseDoubleClickFrames = io.MouseDoubleClickTime * 60;
+				int currClickFrame = ofGetFrameNum();
+				if (currClickFrame - lastClickFrame[i] < mouseDoubleClickFrames) {
+					// Fake the last click time to register a double-click.
+					io.MouseClickedTime[i] = ImGui::GetTime() + io.DeltaTime - (io.MouseDoubleClickTime * 0.5f);
+					lastClickFrame[i] = 0;
+				}
+				else {
+					lastClickFrame[i] = currClickFrame;
+				}
+			}
 		}
 		ImGui::NewFrame();
 	}

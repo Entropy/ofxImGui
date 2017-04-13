@@ -38,5 +38,8 @@ namespace ofxImGui
 		GLuint loadTexture(ofTexture& texture, string imagePath);
 
 		vector<ofTexture*> loadedTextures;
+
+	private:
+		int lastClickFrame[5];
 	};
 }
