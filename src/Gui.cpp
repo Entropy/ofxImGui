@@ -145,7 +145,7 @@ namespace ofxImGui
 			io.MouseDown[i] = engine->mousePressed[i];
 
 			// Update for next frame; set to false only if the mouse has been released
-			engine->mousePressed[i] = false;// !engine->mouseReleased;
+			engine->mousePressed[i] = (doubleClickHack? false : !engine->mouseReleased);
 
 			// If the app framerate dips too low, it becomes impossible to register a double-click
 			// because frames are rendered slower than the minimum double-click time of 0.3 seconds.
