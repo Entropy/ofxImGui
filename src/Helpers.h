@@ -63,6 +63,8 @@ namespace ofxImGui
 
 	bool AddParameter(ofParameter<ofFloatColor>& parameter, bool alpha = true);
 
+	bool AddParameter(ofParameter<std::string>& parameter, int maxChars = 64, ImGuiInputTextFlags flags = 0);
+
 	template<typename ParameterType>
 	bool AddParameter(ofParameter<ParameterType>& parameter);
 

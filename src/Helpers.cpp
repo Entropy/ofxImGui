@@ -411,6 +411,23 @@ bool ofxImGui::AddParameter(ofParameter<ofFloatColor>& parameter, bool alpha)
 }
 
 //--------------------------------------------------------------
+bool ofxImGui::AddParameter(ofParameter<std::string>& parameter, int maxChars, ImGuiInputTextFlags flags)
+{
+	auto tmpRef = parameter.get();
+	auto chrRef = new char[maxChars];
+	strncpy(chrRef, tmpRef.c_str(), maxChars);
+	if (ImGui::InputText(GetUniqueName(parameter), chrRef, maxChars, flags))
+	{
+		tmpRef = chrRef;
+		parameter.set(tmpRef);
+		delete [] chrRef;
+		return true;
+	}
+	delete [] chrRef;
+	return false;
+}
+
+//--------------------------------------------------------------
 bool ofxImGui::AddRadio(ofParameter<int>& parameter, vector<string> labels, int columns)
 {
 	ImGui::Text(parameter.getName().c_str());
