@@ -71,6 +71,16 @@ namespace ofxImGui
 	bool AddRadio(ofParameter<int>& parameter, vector<string> labels, int columns = 1);
 	bool AddStepper(ofParameter<int>& parameter, int step = 1, int stepFast = 100);
 
+#if OF_VERSION_MINOR >= 10
+	bool AddColor(ofParameter<glm::vec3>& parameter);
+	bool AddColor(ofParameter<glm::vec4>& parameter);
+#endif
+
+	bool AddColor(ofParameter<ofVec3f>& parameter);
+	bool AddColor(ofParameter<ofVec4f>& parameter);
+
+	bool AddColor(ofParameter<ofFloatColor>& parameter, bool alpha = true);
+
 	bool AddRange(const string& name, ofParameter<float>& parameterMin, ofParameter<float>& parameterMax, float speed = 0.01f);
 
 #if OF_VERSION_MINOR >= 10

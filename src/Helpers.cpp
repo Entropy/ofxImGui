@@ -463,6 +463,64 @@ bool ofxImGui::AddStepper(ofParameter<int>& parameter, int step, int stepFast)
 	return false;
 }
 
+#if OF_VERSION_MINOR >= 10
+
+//--------------------------------------------------------------
+bool ofxImGui::AddColor(ofParameter<glm::vec3>& parameter)
+{
+	auto tmpRef = parameter.get();
+	if (ImGui::ColorEdit3(GetUniqueName(parameter), &tmpRef.r))
+	{
+		parameter.set(tmpRef);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
+bool ofxImGui::AddColor(ofParameter<glm::vec4>& parameter)
+{
+	auto tmpRef = parameter.get();
+	if (ImGui::ColorEdit4(GetUniqueName(parameter), &tmpRef.r))
+	{
+		parameter.set(tmpRef);
+		return true;
+	}
+	return false;
+}
+
+#endif
+
+//--------------------------------------------------------------
+bool ofxImGui::AddColor(ofParameter<ofVec3f>& parameter)
+{
+	auto tmpRef = parameter.get();
+	if (ImGui::ColorEdit3(GetUniqueName(parameter), tmpRef.getPtr()))
+	{
+		parameter.set(tmpRef);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
+bool ofxImGui::AddColor(ofParameter<ofVec4f>& parameter)
+{
+	auto tmpRef = parameter.get();
+	if (ImGui::ColorEdit4(GetUniqueName(parameter), tmpRef.getPtr()))
+	{
+		parameter.set(tmpRef);
+		return true;
+	}
+	return false;
+}
+
+//--------------------------------------------------------------
+bool ofxImGui::AddColor(ofParameter<ofFloatColor>& parameter, bool alpha)
+{
+	return AddParameter(parameter, alpha);
+}
+
 //--------------------------------------------------------------
 bool ofxImGui::AddRange(const string& name, ofParameter<float>& parameterMin, ofParameter<float>& parameterMax, float speed)
 {
