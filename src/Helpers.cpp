@@ -280,6 +280,7 @@ void ofxImGui::AddGroup(ofParameterGroup& group, Settings& settings)
 
 #if OF_VERSION_MINOR >= 10
 
+/*
 //--------------------------------------------------------------
 bool ofxImGui::AddParameter(ofParameter<glm::tvec2<int>>& parameter)
 {
@@ -315,6 +316,7 @@ bool ofxImGui::AddParameter(ofParameter<glm::tvec4<int>>& parameter)
 	}
 	return false;
 }
+*/
 
 //--------------------------------------------------------------
 bool ofxImGui::AddParameter(ofParameter<glm::vec2>& parameter)
@@ -537,6 +539,7 @@ bool ofxImGui::AddRange(const string& name, ofParameter<float>& parameterMin, of
 
 #if OF_VERSION_MINOR >= 10
 
+/*
 //--------------------------------------------------------------
 bool ofxImGui::AddValues(const string& name, vector<glm::tvec2<int>>& values, int minValue, int maxValue)
 {
@@ -572,6 +575,7 @@ bool ofxImGui::AddValues(const string& name, vector<glm::tvec4<int>>& values, in
 	}
 	return result;
 }
+*/
 
 //--------------------------------------------------------------
 bool ofxImGui::AddValues(const string& name, vector<glm::vec2>& values, float minValue, float maxValue)
